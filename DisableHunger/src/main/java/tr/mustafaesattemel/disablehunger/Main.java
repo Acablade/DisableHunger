@@ -8,6 +8,8 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Main extends JavaPlugin implements Listener {
+    
+    private boolean hungerEnabled = false;
 
     @Override
     public void onEnable() {
@@ -15,6 +17,9 @@ public final class Main extends JavaPlugin implements Listener {
         saveDefaultConfig();
 
         getCommand("disablehungerreload").setExecutor(new ReloadConfig(this));
+        
+        hungerEnabled = getConfig().getBoolean("DisableHunger");
+        
         Bukkit.getPluginManager().registerEvents(this,this);
         Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN+"DisableHunger has been actived!");
 
@@ -27,10 +32,6 @@ public final class Main extends JavaPlugin implements Listener {
     }
     @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent e){
-        if((getConfig().getBoolean("DisableHunger"))==true){
-            e.setCancelled(true);
-        }else{
-            e.setCancelled(false);
-        }
+        e.setCancelled(hungerEnabled);
     }
 }
